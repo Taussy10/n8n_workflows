@@ -1,0 +1,185 @@
+{
+  "name": "Reply an Email",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8c52e997-9433-46a2-bbd7-112dea1a4165",
+      "name": "Watching Inbox",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JVlkf7l93f6qU7WR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "93d49fdd-0144-4a6d-88a6-162298dd1be5",
+      "name": "Getting Email Details",
+      "webhookId": "785bd196-127c-48c3-b68f-c1fb2e677686",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JVlkf7l93f6qU7WR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "15440e82-a08c-4f2b-ab5e-92db35845c42",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        432,
+        144
+      ],
+      "id": "9afe2a04-daed-41fc-b05d-09bad2b2e525",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TLYf3Y4geACISPWB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Searches events in Google Calendar",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "tausif01092@gmail.com",
+          "mode": "list",
+          "cachedResultName": "tausif01092@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        208
+      ],
+      "id": "ad977224-b992-4e98-be0b-2e57f6d178f1",
+      "name": "Seach_Events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "5BGaZzsFn9d2X7l6",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Watching Inbox": {
+      "main": [
+        [
+          {
+            "node": "Getting Email Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting Email Details": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seach_Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "0316f740-17e8-4cb7-8305-e3a0c8241add",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "93768d59abe107d7c6d47f16a7887cbfad80f63f1e262ed871ff3fcb040841ed"
+  },
+  "id": "JEy55osoFTNGaRd8",
+  "tags": [
+    {
+      "createdAt": "2025-07-29T19:27:30.275Z",
+      "updatedAt": "2025-07-29T19:27:30.275Z",
+      "id": "nam4wWUC9QMYVNXI",
+      "name": "Agents"
+    }
+  ]
+}
